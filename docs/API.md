@@ -92,14 +92,17 @@ mapProps(
 ): HigherOrderComponent
 ```
 
-Accepts a function that maps owner props to a new collection of props that are passed to the base component.
+Принимает функцию, которая принимает собственные свойства компонента и возвращает объект новых свойств компонента.
+Новые свойства будут переданы в оборачиваемый компонент.
+Новые свойства компонента можно сформировать на основе собственных свойств переданных в оборачиваемый компонент.
 
-`mapProps()` pairs well with functional utility libraries like [lodash/fp](https://github.com/lodash/lodash/tree/npm/fp). For example, Recompose does not come with a `omitProps()` function, but you can easily build one using lodash-fp's `omit()`:
+`mapProps()` хорошо сочетается с функциональными библиотеками [lodash/fp](https://github.com/lodash/lodash/tree/npm/fp). 
+Например, Recompose не имеет функцию `omitProps()`, но вы можете легко создать ее с помощью lodash-функции `omit()`:
 
 ```js
 const omitProps = keys => mapProps(props => omit(keys, props))
 
-// Because of currying in lodash-fp, this is the same as
+// Из-за того, что lodash функция omit каррируется, это тоже самое, что и:
 const omitProps = compose(mapProps, omit)
 ```
 
@@ -111,9 +114,13 @@ withProps(
 ): HigherOrderComponent
 ```
 
-Like `mapProps()`, except the newly created props are merged with the owner props.
+Принимает функцию, которая принимает собственные свойства компонента 
+и возвращает объект новых свойств компонента.
+Возвращаемый объект свойств будет смержен с собственными свойствами компонента.
 
-Instead of a function, you can also pass a props object directly. In this form, it is similar to `defaultProps()`, except the provided props take precedence over props from the owner.
+Вместо функции вы также можете передать непосредственно объект свойств.
+Это аналогично `defaultProps()` за исключением того, что свойства возвращаемого объекта 
+будут иметь приоритет над собственными свойствами, переданными в оборачиваемый компонент.
 
 
 ### `withPropsOnChange()`
@@ -125,9 +132,14 @@ withPropsOnChange(
 ): HigherOrderComponent
 ```
 
-Like `withProps()`, except the new props are only created when one of the owner props specified by `shouldMapOrKeys` changes. This helps ensure that expensive computations inside `createProps()` are only executed when necessary.
+Создает новые свойства на основе **изменений** собственных свойств.
+Аналогичен `withProps()` за исключением того, что новые свойства создаются только тогда, когда 
+одно из собственных свойств указанных в `shouldMapOrKeys` меняется.
 
-Instead of an array of prop keys, the first parameter can also be a function that returns a boolean, given the current props and the next props. This allows you to customize when `createProps()` should be called.
+Вместо массива имен свойств, первый параметр так же может быть функцией, 
+которая получает current props и next props и возвращает true или false. 
+Это позволяет вам самостоятельно определять, когда `createProps()` должна быть вызвана.
+Если возвращаем false `createProps()` не вызывается.
 
 ### `withHandlers()`
 
